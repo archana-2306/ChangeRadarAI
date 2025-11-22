@@ -151,48 +151,12 @@ Generate or retrieve cached impact report.
   }
 }
 
-🎥 Demo Instructions
-
-Your final demo video should:
-
-Start backend
-
-Start frontend
-
-Open browser
-
-Select story US-101 → US-105
-
-Show:
-
-Impacted services
-
-Endpoints
-
-Downstream dependencies
-
-Components to change
-
-Tests to run
-
-Risk visualization
-
-Show cache by re-running same story
-
-End with value statement for dev + QA
-
-Record using OBS Studio or any screen recorder.
-
 🧩 Tech Stack
 Frontend
 
 React 18
 
 Vite
-
-Tailwind (optional)
-
-shadcn/ui (optional for beauty)
 
 Backend
 
@@ -210,11 +174,7 @@ Groq API → Llama 3.3
 
 Structured JSON responses
 
-DevOps
-
 Docker
-
-Docker Compose
 
 SPDX SBOM
 
