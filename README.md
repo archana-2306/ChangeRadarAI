@@ -1,72 +1,295 @@
-# ChangeRadarAI
-AI that scans your repo and suggest the changes you need to do according to your stories
+🛰️ ChangeradarAI
+AI-powered Change Impact Analysis from Jira Stories
 
-## Project Overview & Problem Statement
+ChangeradarAI automatically analyzes Jira-style user stories and identifies:
 
-Modern banking platforms have many frontend components and microservices.
-For every Jira story, developers must figure out:
-- Which UI screens need changes
-- Which backend services and endpoints are impacted
-- Which downstream services and data models are at risk
+Impacted microservices
 
-This project provides an **intelligent impact analyzer** that:
-- Scans a realistic mock bank monorepo (frontend + backend) by CSI domains (Security, Payment, User Management, etc.)
-- Uses a local **Mistral** model via **Ollama** to:
-  - Suggest a branch name
-  - Identify impacted UI components
-  - Identify impacted backend endpoints and DB fields
-  - Compute risk scores across components and services
+Impacted API endpoints
 
-## Setup & Execution
+Downstream dependencies
 
-1. Install Ollama and pull mistral:
+Code components requiring updates
 
-   ```bash
-   ollama pull mistral
-   ```
+Risk level & score
 
-2. Backend:
+Recommended QA test cases
 
-   ```bash
-   cd backend
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   uvicorn main:app --reload --port 8000
-   ```
+It uses Llama 3.3 (via free Groq API) to provide fast, structured JSON impact reports for developers and QA engineers.
 
-3. Frontend:
+🚀 Why ChangeradarAI?
 
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+Modern microservice systems contain dozens of interconnected services.
+Even small feature changes can ripple across multiple systems.
 
-4. Open the UI (default http://localhost:5173) and click a story to see:
-   - Suggested branch name
-   - Impacted UI components
-   - Impacted backend endpoints
-   - Fields & DB changes
-   - Risk scores per component/service and overall
+Developers waste hours guessing:
 
-## High-Level Architecture Overview
+Which service needs a change?
 
-- **Mock Repo Scanner**
-  - Reads `mock_repo/repo_manifest.json`
-  - Filters frontend components and backend services by CSI.
-- **LLM Impact Service (FastAPI)**
-  - Exposes `/impact/{story_number}`.
-  - Combines story + CSI-filtered inventory + full manifest.
-  - Calls Mistral via Ollama to generate structured JSON impact analysis.
-- **React UI**
-  - Lists stories.
-  - Renders branch, impacts, and risk scores in a developer-friendly view.
+Which endpoints will be affected?
 
-## API Endpoint Documentation
+What should QA test?
 
-- `GET /health` – health check
-- `GET /stories` – list predefined user stories
-- `GET /repo/manifest` – return full mock repo manifest
-- `GET /repo/inventory/{csi}` – return subset of components/services for a CSI
-- `GET /impact/{story_number}` – run full impact analysis for a story
+How risky is the change?
+
+ChangeradarAI eliminates this guesswork.
+
+It acts as an AI-powered architecture radar—reading stories, scanning code, analyzing dependencies, and producing developer-ready impact reports.
+
+✨ Key Features
+🔍 1. Jira Story → Microservice Impact Mapping
+
+Automatically detects which services and endpoints will be affected.
+
+🧭 2. Dependency Graph Reasoning
+
+Understands downstream services, databases, and external integrations.
+
+🛠 3. Developer Recommendations
+
+Lists:
+
+Files to update
+
+Methods to modify
+
+Potential side effects
+
+🧪 4. QA Test Recommendations
+
+Generates:
+
+Unit tests
+
+Integration paths
+
+Security checks
+
+Negative cases
+
+🧮 5. Risk Scoring Engine
+
+Based on:
+
+Functional complexity
+
+Data sensitivity
+
+Security impact
+
+Dependency fan-out
+
+Outputs Low / Medium / High / Critical with 0–100 score.
+
+⚡ 6. Uses Free LLM APIs
+
+Powered by:
+
+Groq API (Llama 3.3)
+
+Zero local GPU needed
+
+Sub-second inference
+
+🧊 7. Smart Caching
+
+Second-time screenshots are instant.
+
+🏗 System Architecture
+           ┌───────────────────────────┐
+           │        Jira Stories       │
+           └───────────────┬──────────┘
+                           │ JSON
+                           ▼
+┌───────────────────────────────────────────────────┐
+│                FastAPI Backend                    │
+│  - Impact Engine                                   │
+│  - LLM Prompt Builder                               │
+│  - GitHub Repo Scanner                              │
+│  - Risk Scoring                                     │
+│  - JSON Cache                                       │
+└───────────────┬────────────────────────────────────┘
+                │
+                │ prompt
+                ▼
+      ┌────────────────────┐
+      │    Groq Llama 3.3   │
+      └────────────────────┘
+                │ JSON
+                ▼
+┌────────────────────────────────────────────┐
+│                React Frontend              │
+│   - Story Explorer                          │
+│   - Impact Dashboard                        │
+│   - Dependency Lists                        │
+│   - Risk Heatmaps                           │
+└────────────────────────────────────────────┘
+
+📂 Folder Structure
+ChangeradarAI/
+│
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── llm_client.py
+│   │   ├── repos.json  (or GitHub repos)
+│   │   ├── stories.json
+│   │   └── cache/
+│   ├── Dockerfile
+│   └── requirements.txt
+│
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── components/
+│   ├── package.json
+│   ├── vite.config.js
+│   └── Dockerfile
+
+🛠 Backend Setup
+1. Install dependencies
+cd backend
+python -m venv .venv
+source .venv/bin/activate    # Windows: .venv\Scripts\activate
+
+pip install -r requirements.txt
+
+2. Set API key
+export GROQ_API_KEY=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
+
+3. Run server
+uvicorn main:app --reload --port 8000
+
+🌐 Frontend Setup
+cd frontend
+npm install
+npm run dev
+
+
+Open http://localhost:5173
+
+🧪 API Endpoints
+✔ GET /stories
+
+List available user stories.
+
+✔ GET /repos
+
+List configured microservices or GitHub repos.
+
+✔ GET /impact/{story_number}
+
+Generate or retrieve cached impact report.
+
+✔ Example Response
+{
+  "cached": false,
+  "result": {
+    "story_number": "US-101",
+    "overall_risk": "high",
+    "impacted_services": [
+      {
+        "service_name": "AuthService",
+        "impacted_endpoints": [
+          "/auth/login",
+          "/auth/verify-otp"
+        ]
+      }
+    ]
+  }
+}
+
+🎥 Demo Instructions
+
+Your final demo video should:
+
+Start backend
+
+Start frontend
+
+Open browser
+
+Select story US-101 → US-105
+
+Show:
+
+Impacted services
+
+Endpoints
+
+Downstream dependencies
+
+Components to change
+
+Tests to run
+
+Risk visualization
+
+Show cache by re-running same story
+
+End with value statement for dev + QA
+
+Record using OBS Studio or any screen recorder.
+
+🧩 Tech Stack
+Frontend
+
+React 18
+
+Vite
+
+Tailwind (optional)
+
+shadcn/ui (optional for beauty)
+
+Backend
+
+FastAPI
+
+Python
+
+Uvicorn
+
+Requests
+
+AI
+
+Groq API → Llama 3.3
+
+Structured JSON responses
+
+DevOps
+
+Docker
+
+Docker Compose
+
+SPDX SBOM
+
+⚠️ Limitations (Summary)
+
+LLM may hallucinate endpoints
+
+Risk scoring is heuristic
+
+No authentication on backend API
+
+JSON cache is local & non-encrypted
+
+Prototype, not production-grade
+
+(See docs/Limitations.md for full details.)
+
+🔮 Future Scope
+
+AST-based endpoint extraction
+
+Live microservice dependency graph
+
+CI integration (“comment impact on PR”)
+
+Automatic unit test generation
+
+Change heatmaps across services
+
+On-prem LLM support for secure orgs
