@@ -98,28 +98,6 @@ Second-time screenshots are instant.
 🏗 System Architecture
 <img width="451" height="679" alt="image" src="https://github.com/user-attachments/assets/03321a02-02ae-4f9d-a636-5bb07f6b4df5" />
 
-
-📂 Folder Structure
-ChangeradarAI/
-│
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── llm_client.py
-│   │   ├── repos.json  (or GitHub repos)
-│   │   ├── stories.json
-│   │   └── cache/
-│   ├── Dockerfile
-│   └── requirements.txt
-│
-├── frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── components/
-│   ├── package.json
-│   ├── vite.config.js
-│   └── Dockerfile
-
 🛠 Backend Setup
 1. Install dependencies
 cd backend
