@@ -31,6 +31,9 @@ Your tasks:
 2. Identify FRONTEND/UI impact:
    - which UI components are affected (from the provided inventory)
    - what new fields or UI elements must be added
+   - give reasons why each component is impacted
+   - give detailed reasoning for the impact analysis
+   - give code suggestions for implementing the changes
    - per-component risk_score 0-10
 3. Identify BACKEND impact:
    - impacted services and endpoints (method + path)
@@ -41,7 +44,9 @@ Your tasks:
 5. Overall risk:
    - overall_risk_level: one of ["low", "medium", "high", "critical"]
    - overall_risk_score: 0-10
-6. Testing & Validation (CRITICAL for production safety):
+6. Overall time estimate for implementation in person-days for development 
+7. Testing & Validation (CRITICAL for production safety):
+   - Overall time estimate for testing and validation in person-days
    - List specific test cases testers should validate BEFORE prod deployment
    - Include edge cases, error scenarios, integration points
    - Specify what metrics/logs should be monitored post-deployment
@@ -60,6 +65,7 @@ Respond ONLY with JSON in this structure:
       "component_name": "LoginPage",
       "file_path": "frontend/src/components/LoginPage.jsx",
       "reason": "why this component is impacted",
+      "changes":"code suggestions for implementing the changes, detailed reasoning for the impact analysis",
       "fields_to_add": [
         {"name": "otp", "type": "string", "description": "One-time password sent to email"}
       ],
@@ -71,7 +77,7 @@ Respond ONLY with JSON in this structure:
       "service_name": "AuthService",
       "endpoint_path": "/auth/verify-otp",
       "method": "POST",
-      "reason": "why this endpoint is impacted",
+      "reason": "why this endpoint is impacted, ",
       "fields_to_add": [
         {"name": "otp", "type": "string", "description": "OTP entered by user"}
       ],
@@ -88,6 +94,9 @@ Respond ONLY with JSON in this structure:
       "reason": "how they interact and what could break",
       "risk_score": 0
     }
+   "daystoimplement": {
+    development: 5,
+    testing_and_validation: 3}
   ],
   "testing_and_validation": {
     "critical_test_cases": [
@@ -231,6 +240,7 @@ def call_groq(prompt: str) -> str:
 
         # Return response text so extract_json can parse JSON fragments if needed
         result = resp.json()
+        print(result)
         return result.get("choices", [{}])[0].get("message", {}).get("content", "")
     except requests.Timeout:
         return '{"error": "Groq request timed out after 300 seconds"}'

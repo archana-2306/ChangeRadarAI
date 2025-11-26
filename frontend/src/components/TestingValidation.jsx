@@ -198,30 +198,6 @@ const TestingValidation = ({ storyNumber, API_BASE, testingData: initialTestingD
                         </div>
                       )}
                     </div>
-                    <button
-                      onClick={() => runTest(item)}
-                      disabled={isRunning}
-                      style={{
-                        padding: '0.4rem 0.8rem',
-                        marginLeft: '1rem',
-                        background: isRunning ? '#e5e7eb' : '#667eea',
-                        color: isRunning ? '#6b7280' : 'white',
-                        border: 'none',
-                        borderRadius: 4,
-                        fontSize: 11,
-                        fontWeight: 600,
-                        cursor: isRunning ? 'not-allowed' : 'pointer',
-                        transition: 'all 0.2s',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isRunning) e.currentTarget.style.background = '#5568d3';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isRunning) e.currentTarget.style.background = '#667eea';
-                      }}
-                    >
-                      {isRunning ? '⏳ Running' : 'Run Test'}
-                    </button>
                   </div>
                 </div>
               );
@@ -267,97 +243,6 @@ const TestingValidation = ({ storyNumber, API_BASE, testingData: initialTestingD
           items={edge_cases_to_validate}
           sectionKey="edge_cases"
         />
-      )}
-
-      {/* Monitoring & Alerts */}
-      {monitoring_and_alerts.length > 0 && (
-        <div style={{
-          background: '#ffffff',
-          border: '1px solid #e5e7eb',
-          borderRadius: 8,
-          padding: '1.25rem',
-          marginBottom: '1rem',
-        }}>
-          <h3 style={{ margin: '0 0 1rem 0', fontSize: 14, fontWeight: 600, color: '#1f2937' }}>
-            📊 Monitoring & Alerts
-          </h3>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '1rem',
-          }}>
-            {monitoring_and_alerts.map((alert, idx) => (
-              <div
-                key={idx}
-                style={{
-                  background: '#f9fafb',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: 6,
-                  padding: '1rem',
-                }}
-              >
-                <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: '#1f2937' }}>
-                  📈 {alert}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Data Migration Risks */}
-      {data_migration_risks.length > 0 && (
-        <Section
-          title={`Data Migration Risks (${data_migration_risks.length})`}
-          icon="⚠️"
-          items={data_migration_risks}
-          sectionKey="migration_risks"
-        />
-      )}
-
-      {/* Production Deployment Checklist */}
-      {production_deployment_checklist.length > 0 && (
-        <div style={{
-          background: '#ffffff',
-          border: '2px solid #10b981',
-          borderRadius: 8,
-          padding: '1.25rem',
-          marginTop: '1rem',
-        }}>
-          <h3 style={{ margin: '0 0 1rem 0', fontSize: 14, fontWeight: 600, color: '#1f2937' }}>
-            ✅ Production Deployment Checklist
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {production_deployment_checklist.map((item, idx) => (
-              <label
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '0.75rem',
-                  background: '#f9fafb',
-                  borderRadius: 6,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#f0fdf4')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#f9fafb')}
-              >
-                <input
-                  type="checkbox"
-                  style={{
-                    marginRight: '0.75rem',
-                    cursor: 'pointer',
-                    width: 18,
-                    height: 18,
-                    accentColor: '#10b981',
-                  }}
-                />
-                <span style={{ fontSize: 13, color: '#4b5563' }}>{item}</span>
-              </label>
-            ))}
-          </div>
-        </div>
       )}
     </div>
   );

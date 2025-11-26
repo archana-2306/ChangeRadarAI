@@ -30,6 +30,7 @@ const Dashboard = ({ impact, selected, onTestingDataAvailable }) => {
     cross_service_risks = [],
     suggested_branch_name,
     testing_and_validation = null,
+    daystoimplement = { development: 0, testing_and_validation: 0 }
   } = impact;
 
   // Notify parent when testing data is available
@@ -133,6 +134,8 @@ const Dashboard = ({ impact, selected, onTestingDataAvailable }) => {
         <StatCard title="Frontend Components" value={frontend_impacts.length} color="#667eea" icon="🎨" />
         <StatCard title="Backend Services" value={backend_impacts.length} color="#f59e0b" icon="⚙️" />
         <StatCard title="Cross-Service Risks" value={cross_service_risks.length} color="#ef4444" icon="⚠️" />
+        <StatCard title="Required Dev Days" value={daystoimplement.development} color="#ef4444" icon="💻"/>
+        <StatCard title="Required test Days" value={daystoimplement.testing_and_validation} color="#ef4444" icon="🛠️"/>
       </div>
 
       {/* Content Sections */}

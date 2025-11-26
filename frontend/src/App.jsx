@@ -5,6 +5,7 @@ import TestingValidation from './components/TestingValidation';
 import TestResultsMonitor from './components/TestResultsMonitor';
 import DataMigrationRisks from './components/DataMigrationRisks';
 import ProductionDeploymentChecklist from './components/ProductionDeploymentChecklist';
+import AddStoryForm from "./components/AddStoryForm";
 
 const API_BASE = 'http://localhost:8000';
 
@@ -16,8 +17,7 @@ const App = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('impact');
 
-  useEffect(() => {
-    const loadStories = async () => {
+  const loadStories = async () => {
       try {
         const res = await fetch(`${API_BASE}/stories`);
         const data = await res.json();
@@ -26,6 +26,8 @@ const App = () => {
         setError('Failed to load stories');
       }
     };
+
+  useEffect(() => {
     loadStories();
   }, []);
 
@@ -54,9 +56,7 @@ const App = () => {
   const tabs = [
     { id: 'impact', label: '📊 Impact Analysis', icon: '📊' },
     { id: 'testing', label: '🧪 Testing & Validation', icon: '🧪' },
-    { id: 'results', label: '📈 Test Results', icon: '📈' },
-    { id: 'migration', label: '🔄 Data Migration', icon: '🔄' },
-    { id: 'deployment', label: '🚀 Deployment', icon: '🚀' },
+    { id: 'deployment', label: '🚀 Monitoring and deployment', icon: '🚀' },
   ];
 
   return (
@@ -90,10 +90,11 @@ const App = () => {
           {/* Left Sidebar - Stories */}
           <aside style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <StoryTable stories={stories} selected={selected} onSelect={onSelect} />
+            <AddStoryForm reloadStories={loadStories} /> 
             {error && (
               <div style={{
                 background: '#fef2f2',
-                border: '1px solid #fed7d7',
+                border: '1px solid #171313ff',
                 borderRadius: 8,
                 padding: '1rem',
                 color: '#991b1b',
@@ -139,6 +140,70 @@ const App = () => {
 
             {impact && !loading && (
               <div>
+<div
+  style={{
+    padding: "1rem",
+    marginBottom: "1rem",
+    background: "white",
+    border: "1px solid #e5e7eb",
+    borderRadius: "10px",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+  }}
+>
+  {/* Story Number */}
+  <h3
+    style={{
+      fontSize: "18px",
+      fontWeight: 600,
+      color: "#4f46e5",
+      marginBottom: "8px",
+    }}
+  >
+    Story Number:{" "}
+    <span style={{ fontWeight: 400 }}>{selected.story_number}</span>
+  </h3>
+
+  {/* Description */}
+  <p style={{ fontSize: "14px", color: "#374151", marginBottom: "6px" }}>
+    <strong>Description:</strong> {selected.description}
+  </p>
+
+  {/* Acceptance Criteria */}
+  <p
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      marginBottom: "6px",
+      whiteSpace: "pre-line",
+    }}
+  >
+    <strong>Acceptance Criteria:</strong> {selected.acceptance_criteria}
+  </p>
+
+  {/* Story Type */}
+  <p
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      marginBottom: "6px",
+      whiteSpace: "pre-line",
+    }}
+  >
+    <strong>Story Type:</strong> {selected.story_type}
+  </p>
+
+  {/* Impacted CSI */}
+  <p
+    style={{
+      fontSize: "14px",
+      color: "#374151",
+      marginBottom: "6px",
+      whiteSpace: "pre-line",
+    }}
+  >
+    <strong>Impacted CSI:</strong> {selected.impacted_csi}
+  </p>
+</div>
                 {/* Tab Navigation */}
                 <div style={{
                   display: 'flex',
@@ -194,14 +259,8 @@ const App = () => {
                       testingData={impact?.testing_and_validation}
                     />
                   )}
-                  {activeTab === 'results' && selected && (
-                    <TestResultsMonitor storyNumber={selected.story_number} API_BASE={API_BASE} />
-                  )}
-                  {activeTab === 'migration' && selected && (
-                    <DataMigrationRisks storyNumber={selected.story_number} API_BASE={API_BASE} />
-                  )}
                   {activeTab === 'deployment' && selected && (
-                    <ProductionDeploymentChecklist storyNumber={selected.story_number} API_BASE={API_BASE} />
+                    <ProductionDeploymentChecklist storyNumber={selected.story_number} API_BASE={API_BASE} deployData={impact?.testing_and_validation}/>
                   )}
                 </div>
               </div>

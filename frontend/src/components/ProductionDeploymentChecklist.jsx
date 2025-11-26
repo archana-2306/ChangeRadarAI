@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
-const ProductionDeploymentChecklist = ({ storyNumber, API_BASE }) => {
-  const [deploymentData, setDeploymentData] = useState(null);
+const ProductionDeploymentChecklist = ({ storyNumber, API_BASE, deployData }) => {
+  const [deploymentData, setDeploymentData] = useState( deployData || null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [expandedSections, setExpandedSections] = useState({});
+  const [testResults, setTestResults] = useState({});
   const [checklist, setChecklist] = useState({});
   const [deploymentStatus, setDeploymentStatus] = useState('pending');
 
   useEffect(() => {
-    if (storyNumber) {
-      fetchDeploymentData();
+    if (deployData) {
+      setDeploymentData(deployData);
+    } else if (storyNumber) {
+      fetchDeploymentData(storyNumber);
     }
   }, [storyNumber]);
+
+  const toggleSection = (section) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   const fetchDeploymentData = async () => {
     setLoading(true);
@@ -32,6 +43,95 @@ const ProductionDeploymentChecklist = ({ storyNumber, API_BASE }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+    const Section = ({ title, icon, items, sectionKey }) => {
+    const isExpanded = expandedSections[sectionKey];
+
+    return (
+      <div style={{
+        background: '#ffffff',
+        border: '1px solid #e5e7eb',
+        borderRadius: 8,
+        marginBottom: '1rem',
+        overflow: 'hidden',
+      }}>
+        <button
+          onClick={() => toggleSection(sectionKey)}
+          style={{
+            width: '100%',
+            padding: '1rem 1.25rem',
+            background: '#f9fafb',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderBottom: isExpanded ? '1px solid #e5e7eb' : 'none',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#f3f4f6')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#f9fafb')}
+        >
+          <h3 style={{ margin: 0, fontSize: 14, fontWeight: 600, color: '#1f2937' }}>
+            {icon} {title}
+          </h3>
+          <span style={{
+            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s',
+            fontSize: 14,
+            color: '#6b7280',
+          }}>
+            ▼
+          </span>
+        </button>
+
+        {isExpanded && (
+          <div style={{ padding: '1rem 1.25rem' }}>
+            {items.map((item, idx) => {
+              const testResult = testResults[item];
+              const isRunning = runningTests === item;
+
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    marginBottom: idx < items.length - 1 ? '1rem' : 0,
+                    paddingBottom: idx < items.length - 1 ? '1rem' : 0,
+                    borderBottom: idx < items.length - 1 ? '1px solid #f3f4f6' : 'none',
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                    <div style={{ flex: 1 }}>
+                      <p style={{ margin: '0 0 0.25rem 0', fontSize: 13, fontWeight: 500, color: '#1f2937' }}>
+                        {item}
+                      </p>
+                      {testResult && (
+                        <div style={{
+                          marginTop: '0.5rem',
+                          padding: '0.5rem 0.75rem',
+                          background: testResult.status === 'passed' ? '#ecfdf5' : '#fef2f2',
+                          border: `1px solid ${getStatusColor(testResult.status)}`,
+                          borderRadius: 4,
+                          fontSize: 12,
+                          color: getStatusColor(testResult.status),
+                        }}>
+                          <strong style={{ marginRight: '0.5rem' }}>
+                            {getStatusIcon(testResult.status)} {testResult.status.toUpperCase()}
+                          </strong>
+                          {testResult.message && <span>{testResult.message}</span>}
+                          {testResult.error && <span style={{ color: '#991b1b' }}>{testResult.error}</span>}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const toggleChecklistItem = (idx) => {
@@ -109,7 +209,10 @@ const ProductionDeploymentChecklist = ({ storyNumber, API_BASE }) => {
     incident_response = null,
     deployment_windows = null,
     feature_flag_strategy = null,
-  } = deploymentData;
+    monitoring_and_alerts = [],
+    data_migration_risks = [],
+    production_deployment_checklist = []
+  } = deployData;
 
   const deploymentStatusColor = {
     pending: '#f59e0b',
@@ -120,7 +223,7 @@ const ProductionDeploymentChecklist = ({ storyNumber, API_BASE }) => {
 
   return (
     <div style={{ marginTop: '2rem' }}>
-      {/* Header */}
+      {/* Header
       <div style={{
         background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
         borderRadius: 12,
@@ -151,7 +254,98 @@ const ProductionDeploymentChecklist = ({ storyNumber, API_BASE }) => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      {/* Monitoring & Alerts */}
+      {monitoring_and_alerts.length > 0 && (
+        <div style={{
+          background: '#ffffff',
+          border: '1px solid #e5e7eb',
+          borderRadius: 8,
+          padding: '1.25rem',
+          marginBottom: '1rem',
+        }}>
+          <h3 style={{ margin: '0 0 1rem 0', fontSize: 14, fontWeight: 600, color: '#1f2937' }}>
+            📊 Monitoring & Alerts
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '1rem',
+          }}>
+            {monitoring_and_alerts.map((alert, idx) => (
+              <div
+                key={idx}
+                style={{
+                  background: '#f9fafb',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: 6,
+                  padding: '1rem',
+                }}
+              >
+                <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: '#1f2937' }}>
+                  📈 {alert}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Data Migration Risks
+      {data_migration_risks.length > 0 && (
+        <Section
+          title={`Data Migration Risks (${data_migration_risks.length})`}
+          icon="⚠️"
+          items={data_migration_risks}
+          sectionKey="migration_risks"
+        />
+      )} */}
+
+      {/* Production Deployment Checklist */}
+      {production_deployment_checklist.length > 0 && (
+        <div style={{
+          background: '#ffffff',
+          border: '2px solid #10b981',
+          borderRadius: 8,
+          padding: '1.25rem',
+          marginTop: '1rem',
+        }}>
+          <h3 style={{ margin: '0 0 1rem 0', fontSize: 14, fontWeight: 600, color: '#1f2937' }}>
+            ✅ Production Deployment Checklist
+          </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {production_deployment_checklist.map((item, idx) => (
+              <label
+                key={idx}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '0.75rem',
+                  background: '#f9fafb',
+                  borderRadius: 6,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#f0fdf4')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#f9fafb')}
+              >
+                <input
+                  type="checkbox"
+                  style={{
+                    marginRight: '0.75rem',
+                    cursor: 'pointer',
+                    width: 18,
+                    height: 18,
+                    accentColor: '#10b981',
+                  }}
+                />
+                <span style={{ fontSize: 13, color: '#4b5563' }}>{item}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Pre-Deployment Checklist */}
       {pre_deployment_checklist.length > 0 && (

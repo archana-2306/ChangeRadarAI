@@ -1,52 +1,44 @@
 [
-  {
-    "story_number": "US-101",
-    "story_type": "Feature",
-    "description": "Add two-factor authentication to login process",
-    "acceptance_criteria": "User receives OTP via email after username/password login. OTP valid for 5 minutes. User enters OTP to complete login. Invalid OTP shows error message.",
-    "impacted_csi": "Security",
-    "components": [
-      "AuthService"
-    ]
-  },
-  {
-    "story_number": "US-102",
-    "story_type": "Enhancement",
-    "description": "Improve password hashing algorithm for better security",
-    "acceptance_criteria": "Replace current SHA256 with bcrypt hashing. Existing passwords migrated on next login. Password strength validation added. Hash generation time < 500ms.",
-    "impacted_csi": "Security",
-    "components": [
-      "AuthService"
-    ]
-  },
-  {
-    "story_number": "US-103",
-    "story_type": "Feature",
-    "description": "Implement payment gateway integration for credit card processing",
-    "acceptance_criteria": "Integrate with Stripe payment gateway. Support credit card and debit card payments. Transaction ID returned for successful payments. Failed payments logged with error codes.",
-    "impacted_csi": "Payment",
-    "components": [
-      "PaymentService"
-    ]
-  },
-  {
-    "story_number": "US-104",
-    "story_type": "Bug Fix",
-    "description": "Fix user email validation not accepting valid email formats",
-    "acceptance_criteria": "Email validation accepts all valid formats including plus addressing. Common valid emails like user+tag@example.com accepted. Invalid emails rejected with clear error message.",
-    "impacted_csi": "User Management",
-    "components": [
-      "UserService"
-    ]
-  },
-  {
-    "story_number": "US-105",
-    "story_type": "Enhancement",
-    "description": "Add ability to update user profile information including email and full name",
-    "acceptance_criteria": "API endpoint allows updating email, full_name fields. Email uniqueness validated. Changes reflected immediately. Audit log created for profile changes.",
-    "impacted_csi": "User Management",
-    "components": [
-      "UserService"
-    ]
-  }
+    {
+        "story_number": "US-101",
+        "story_type": "Feature",
+        "description": "Add two-factor authentication to login process",
+        "acceptance_criteria": "User receives OTP via email after username/password login. OTP valid for 5 minutes. User enters OTP to complete login. Invalid OTP shows error message.",
+        "impacted_csi": "Security"
+    },
+    {
+        "story_number": "US-102",
+        "story_type": "Enhancement",
+        "description": "Improve password hashing algorithm for better security",
+        "acceptance_criteria": "Replace current SHA256 with bcrypt hashing. Existing passwords migrated on next login. Password strength validation added. Hash generation time < 500ms.",
+        "impacted_csi": "Security"
+    },
+    {
+        "story_number": "US-103",
+        "story_type": "Feature",
+        "description": "Implement payment gateway integration for credit card processing",
+        "acceptance_criteria": "Integrate with Stripe payment gateway. Support credit card and debit card payments. Transaction ID returned for successful payments. Failed payments logged with error codes.",
+        "impacted_csi": "Payment"
+    },
+    {
+        "story_number": "US-104",
+        "story_type": "Feature",
+        "description": "Setup autopay enrollment for recurring bills",
+        "acceptance_criteria": "User can enroll into autopay for selected bills. Autopay processes payments on due date. User notified via email before payment. Users can cancel autopay anytime.",
+        "impacted_csi": "Payment"
+    },
+    {
+        "story_number": "US-105",
+        "story_type": "Enhancement",
+        "description": "Add ability to update user profile information including email and full name",
+        "acceptance_criteria": "API endpoint allows updating email, full_name fields. Email uniqueness validated. Changes reflected immediately. Audit log created for profile changes.",
+        "impacted_csi": "User Management"
+    },
+    {
+        "story_number": "US-106",
+        "story_type": "Feature",
+        "description": "Implement account lockout after multiple failed login attempts",
+        "acceptance_criteria": "Account locked after 5 failed login attempts within 15 minutes. Lockout duration is 30 minutes. User notified via email upon lockout. Admin can manually unlock accounts.",
+        "impacted_csi": "Security"
+    }
 ]

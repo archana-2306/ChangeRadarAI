@@ -1,13 +1,12 @@
 import { useState } from "react";
 
-export default function AddStoryForm() {
+export default function AddStoryForm({ reloadStories }) {
   const [form, setForm] = useState({
     story_number: "",
     story_type: "",
     description: "",
     acceptance_criteria: "",
-    impacted_csi: "",
-    components: ""
+    impacted_csi: ""
   });
 
   const [message, setMessage] = useState(null);
@@ -27,8 +26,7 @@ export default function AddStoryForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
-          components: form.components.split(",").map((x) => x.trim())
+          ...form
         })
       });
 
@@ -40,13 +38,13 @@ export default function AddStoryForm() {
       }
 
       setMessage("Story added successfully");
+      if (reloadStories) reloadStories();
       setForm({
         story_number: "",
         story_type: "",
         description: "",
         acceptance_criteria: "",
-        impacted_csi: "",
-        components: ""
+        impacted_csi: ""
       });
     } catch (err) {
       setError("Network error");
